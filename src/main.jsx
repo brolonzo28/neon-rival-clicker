@@ -11,7 +11,9 @@ const buildings = [
   { id: 'fleet', icon: '△', name: 'Jurassic Space Program', note: 'Weaponized prehistoric science.', base: 190000, gps: 260 },
   { id: 'satellite', icon: '📡', name: 'Goon Propaganda Satellite', note: 'Broadcasts brainrot galaxy-wide.', base: 1300000, gps: 1800 },
   { id: 'embassy', icon: '♜', name: 'Intergalactic Goon Embassy', note: 'Diplomatic immunity for gooning.', base: 9000000, gps: 12000 },
-  { id: 'singularity', icon: '●', name: 'Infinite Goon Singularity', note: 'Physics has left the server.', base: 75000000, gps: 85000 }
+  { id: 'singularity', icon: '●', name: 'Infinite Goon Singularity', note: 'Physics has left the server.', base: 75000000, gps: 85000 },
+  { id: 'dyson', icon: '☀', name: 'Goon Dyson Swarm', note: 'Drains a star to power the grind.', base: 650000000, gps: 650000 },
+  { id: 'multiverse', icon: '∞', name: 'Multiverse Goon Foundry', note: 'Every timeline clocks in at once.', base: 6000000000, gps: 5000000 }
 ];
 
 const upgrades = [
