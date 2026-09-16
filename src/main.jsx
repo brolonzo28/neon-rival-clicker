@@ -4,14 +4,14 @@ import './styles.css';
 import './effects.css';
 
 const buildings = [
-  { id: 'raptor', icon: '🦖', name: 'Certified Tax Raptor', note: 'Audits fractions at speed.', base: 50, gps: 0.2 },
-  { id: 'rocket', icon: '🚀', name: 'Ballistic Homework Launcher', note: 'Sends worksheets into orbit.', base: 350, gps: 1 },
-  { id: 'trooper', icon: '⚔', name: 'Galactic Goon Academy', note: 'Trains the dark side of X.', base: 2500, gps: 8 },
-  { id: 'lab', icon: '◉', name: 'Orbital Algebra Prison', note: 'No variable escapes alive.', base: 18000, gps: 47 },
-  { id: 'fleet', icon: '△', name: 'Jurassic Space Program', note: 'Weaponized prehistoric science.', base: 120000, gps: 260 },
-  { id: 'satellite', icon: '📡', name: 'Goon Propaganda Satellite', note: 'Broadcasts brainrot galaxy-wide.', base: 850000, gps: 1800 },
-  { id: 'embassy', icon: '♜', name: 'Intergalactic Goon Embassy', note: 'Diplomatic immunity for gooning.', base: 6000000, gps: 12000 },
-  { id: 'singularity', icon: '●', name: 'Infinite Goon Singularity', note: 'Physics has left the server.', base: 50000000, gps: 85000 }
+  { id: 'raptor', icon: '🦖', name: 'Certified Tax Raptor', note: 'Audits fractions at speed.', base: 80, gps: 0.2 },
+  { id: 'rocket', icon: '🚀', name: 'Ballistic Homework Launcher', note: 'Sends worksheets into orbit.', base: 550, gps: 1 },
+  { id: 'trooper', icon: '⚔', name: 'Galactic Goon Academy', note: 'Trains the dark side of X.', base: 4000, gps: 8 },
+  { id: 'lab', icon: '◉', name: 'Orbital Algebra Prison', note: 'No variable escapes alive.', base: 28000, gps: 47 },
+  { id: 'fleet', icon: '△', name: 'Jurassic Space Program', note: 'Weaponized prehistoric science.', base: 190000, gps: 260 },
+  { id: 'satellite', icon: '📡', name: 'Goon Propaganda Satellite', note: 'Broadcasts brainrot galaxy-wide.', base: 1300000, gps: 1800 },
+  { id: 'embassy', icon: '♜', name: 'Intergalactic Goon Embassy', note: 'Diplomatic immunity for gooning.', base: 9000000, gps: 12000 },
+  { id: 'singularity', icon: '●', name: 'Infinite Goon Singularity', note: 'Physics has left the server.', base: 75000000, gps: 85000 }
 ];
 
 const upgrades = [
@@ -24,7 +24,12 @@ const upgrades = [
   { id: 'goon-accountant', art: 'accountant', name: 'Certified Goon Accountant', note: 'Factories produce ×5', cost: 1500000, effect: 'auto', multiplier: 5 },
   { id: 'moon-core', art: 'core', name: 'Illegal Moon Reactor', note: 'Everything produces ×2', cost: 350000, effect: 'all', multiplier: 2 },
   { id: 'goon-license', art: 'license', name: 'Intergalactic Goon License', note: 'Everything produces ×3', cost: 8000000, effect: 'all', multiplier: 3 },
-  { id: 'forbidden-core', art: 'singularity', name: 'Forbidden Goon Singularity', note: 'Everything produces ×5', cost: 75000000, effect: 'all', multiplier: 5 }
+  { id: 'forbidden-core', art: 'singularity', name: 'Forbidden Goon Singularity', note: 'Everything produces ×5', cost: 75000000, effect: 'all', multiplier: 5 },
+  { id: 'dino-overclock', art: 'optic', name: 'Dino Laser Overclock', note: 'Factories produce ×8', cost: 180000000, effect: 'auto', multiplier: 8 },
+  { id: 'titan-wrist', art: 'knuckles', name: 'Titan Wrist Implant', note: 'Manual goons ×25', cost: 550000000, effect: 'click', multiplier: 25 },
+  { id: 'donor-crown', art: 'diamond', name: 'Top Donor Galactic Crown', note: 'Everything produces ×10', cost: 2500000000, effect: 'all', multiplier: 10 },
+  { id: 'academy-empire', art: 'diploma', name: 'Goon Academy Empire', note: 'Factories produce ×25', cost: 18000000000, effect: 'auto', multiplier: 25 },
+  { id: 'reality-pass', art: 'license', name: 'Reality-Bending Battle Pass', note: 'Everything produces ×50', cost: 150000000000, effect: 'all', multiplier: 50 }
 ];
 
 function getPowerMultipliers(ids = []) {
@@ -58,6 +63,17 @@ function makeSudoku(source, puzzleIndex) {
   const shifted = source.map(value => value ? ((value + offset - 1) % 9) + 1 : 0);
   if (Math.floor(puzzleIndex / 9) % 2 === 0) return shifted;
   return shifted.map((_, index) => shifted[(index % 9) * 9 + Math.floor(index / 9)]);
+}
+
+const multiplicationModes = {
+  quick: { label: '2 DIGIT × 1 DIGIT', reward: 90 },
+  elite: { label: '2 DIGIT × 2 DIGIT', reward: 350 }
+};
+
+function makeMultiplication(mode) {
+  const left = Math.floor(Math.random() * 90) + 10;
+  const right = mode === 'elite' ? Math.floor(Math.random() * 90) + 10 : Math.floor(Math.random() * 8) + 2;
+  return { left, right };
 }
 let audioContext;
 let selectedGoonVoice;
@@ -160,6 +176,11 @@ function App() {
   const [sudokuValues, setSudokuValues] = useState(() => makeSudoku(sudokuLevels[initialSudokuDifficulty].puzzle, saved?.sudokuIndex || 0).map(value => value || ''));
   const [sudokuStatus, setSudokuStatus] = useState(`Complete the grid for +${sudokuLevels[initialSudokuDifficulty].reward} goons.`);
   const [sudokuTransitioning, setSudokuTransitioning] = useState(false);
+  const [mathOpen, setMathOpen] = useState(false);
+  const [mathMode, setMathMode] = useState('quick');
+  const [mathProblem, setMathProblem] = useState(() => makeMultiplication('quick'));
+  const [mathAnswer, setMathAnswer] = useState('');
+  const [mathStatus, setMathStatus] = useState('Solve the multiplication to earn bonus goons.');
 
   const power = getPowerMultipliers(boughtUpgrades);
   const clickPower = power.click;
@@ -257,6 +278,37 @@ function App() {
     setSudokuStatus(`${sudokuLevels[level].label} selected · Reward: +${sudokuLevels[level].reward} goons.`);
   }
 
+  function openSudoku() {
+    setMathOpen(false);
+    setSudokuOpen(true);
+  }
+
+  function openMultiplication() {
+    setSudokuOpen(false);
+    setMathOpen(true);
+  }
+
+  function chooseMathMode(mode) {
+    setMathMode(mode);
+    setMathProblem(makeMultiplication(mode));
+    setMathAnswer('');
+    setMathStatus(`${multiplicationModes[mode].label} selected · +${multiplicationModes[mode].reward} goons.`);
+  }
+
+  function checkMultiplication() {
+    if (Number(mathAnswer) !== mathProblem.left * mathProblem.right) {
+      setMathStatus('Not quite—check the numbers and try again.');
+      return;
+    }
+    const reward = multiplicationModes[mathMode].reward;
+    setGoons(value => value + reward);
+    setLifetimeGoons(value => value + reward);
+    setToast(`Multiplication solved · +${reward} goons`);
+    setMathProblem(makeMultiplication(mathMode));
+    setMathAnswer('');
+    setMathStatus(`Correct! New problem loaded · +${reward} goons.`);
+  }
+
   const rank = lifetimeGoons < 100 ? 'YOUNGLING' : lifetimeGoons < 1000 ? 'PADAWAN' : lifetimeGoons < 10000 ? 'GOON MASTER' : 'GALACTIC MENACE';
 
   return <main className="game-shell">
@@ -264,7 +316,7 @@ function App() {
     <header>
       <div className="brand"><span className="brand-icon">G</span><span><b>GOON <em>WARS</em></b><small>THE MATH STRIKES BACK</small></span></div>
       <div className="headline"><i /> BATTLE ONLINE <strong>{rank}</strong></div>
-      <div className="header-actions"><button className="sudoku-launch" onClick={() => setSudokuOpen(true)}>SUDOKU <b>UP TO +900 G</b></button><button className="sound-toggle" onClick={() => setSoundOn(value => !value)} aria-label="Toggle click sound">{soundOn ? 'VOICE ON' : 'VOICE OFF'}</button><div className="mini-stat"><span>MANUAL GOONS</span><b>{compact(manualGoons)}</b></div></div>
+      <div className="header-actions"><button className="math-launch" onClick={openMultiplication}>MULTIPLY <b>+350 G</b></button><button className="sudoku-launch" onClick={openSudoku}>SUDOKU <b>UP TO +900 G</b></button><button className="sound-toggle" onClick={() => setSoundOn(value => !value)} aria-label="Toggle click sound">{soundOn ? 'VOICE ON' : 'VOICE OFF'}</button><div className="mini-stat"><span>MANUAL GOONS</span><b>{compact(manualGoons)}</b></div></div>
     </header>
 
     <div className="resource-bar">
@@ -326,6 +378,22 @@ function App() {
       <div className="sudoku-grid">{sudokuValues.map((value, index) => <input key={`${sudokuIndex}-${index}`} value={value} readOnly={Boolean(currentSudokuPuzzle[index])} className={currentSudokuPuzzle[index] ? 'given' : ''} onChange={event => updateSudoku(index, event.target.value)} inputMode="numeric" maxLength="1" aria-label={`Sudoku row ${Math.floor(index / 9) + 1} column ${(index % 9) + 1}`} />)}</div>
       <div className="sudoku-actions"><button disabled={sudokuTransitioning} onClick={resetSudoku}>RESET</button><button disabled={sudokuTransitioning} className="check" onClick={checkSudoku}>{sudokuTransitioning ? 'NEXT PUZZLE…' : 'CHECK GRID'}</button></div>
       <small>Each row, column, and 3×3 sector needs the numbers 1–9.</small>
+    </aside>
+    <div className={`math-backdrop ${mathOpen ? 'open' : ''}`} onClick={() => setMathOpen(false)} />
+    <aside className={`math-drawer ${mathOpen ? 'open' : ''}`} aria-hidden={!mathOpen}>
+      <button className="math-close" onClick={() => setMathOpen(false)} aria-label="Close multiplication challenge">×</button>
+      <span className="drawer-kicker">GOON ACADEMY · MULTIPLICATION LAB</span>
+      <h2>LASER <em>MATH</em></h2>
+      <div className="math-tabs">{Object.entries(multiplicationModes).map(([key, mode]) => <button key={key} className={mathMode === key ? 'active' : ''} onClick={() => chooseMathMode(key)}><b>{mode.label}</b><small>+{mode.reward} G</small></button>)}</div>
+      <p>{mathStatus}</p>
+      <div className="math-card">
+        <span>CALCULATE</span>
+        <strong>{mathProblem.left} × {mathProblem.right}</strong>
+        <label htmlFor="math-answer">YOUR ANSWER</label>
+        <input id="math-answer" value={mathAnswer} onChange={event => /^\d*$/.test(event.target.value) && setMathAnswer(event.target.value)} onKeyDown={event => event.key === 'Enter' && checkMultiplication()} inputMode="numeric" autoComplete="off" placeholder="?" />
+        <button onClick={checkMultiplication}>FIRE ANSWER</button>
+      </div>
+      <small>A fresh multiplication appears after every correct answer.</small>
     </aside>
     <footer><span>GOON WARS // SECTOR 66</span><span>MAY THE MATH BE WITH YOU</span></footer>
   </main>;
